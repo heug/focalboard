@@ -11,6 +11,8 @@
 ![Dev Release](https://github.com/mattermost/focalboard/actions/workflows/dev-release.yml/badge.svg)
 ![Prod Release](https://github.com/mattermost/focalboard/actions/workflows/prod-release.yml/badge.svg)
 
+<!-- Verification test -->
+
 ![Focalboard](website/site/static/img/hero.jpg)
 
 Focalboard is an open source, multilingual, self-hosted project management tool that's an alternative to Trello, Notion, and Asana.
