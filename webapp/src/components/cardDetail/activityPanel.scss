@@ -1,0 +1,73 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
+.ActivityPanel {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 600;
+        color: rgb(var(--center-channel-color-rgb));
+        margin: 0;
+    }
+
+    &__count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        background: rgba(var(--center-channel-color-rgb), 0.08);
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        color: rgba(var(--center-channel-color-rgb), 0.72);
+    }
+
+    &__empty {
+        padding: 24px 16px;
+        text-align: center;
+        color: rgba(var(--center-channel-color-rgb), 0.56);
+        font-size: 14px;
+        background: rgba(var(--center-channel-color-rgb), 0.04);
+        border-radius: 4px;
+    }
+
+    &__events {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__show-more {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        background: transparent;
+        border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+        border-radius: 4px;
+        color: rgb(var(--link-color-rgb));
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background: rgba(var(--center-channel-color-rgb), 0.04);
+            border-color: rgba(var(--center-channel-color-rgb), 0.24);
+        }
+
+        &:active {
+            background: rgba(var(--center-channel-color-rgb), 0.08);
+        }
+    }
+}

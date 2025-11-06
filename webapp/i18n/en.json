@@ -459,5 +459,22 @@
   "tutorial_tip.got_it": "Got it",
   "tutorial_tip.ok": "Next",
   "tutorial_tip.out": "Opt out of these tips.",
-  "tutorial_tip.seen": "Seen this before?"
+  "tutorial_tip.seen": "Seen this before?",
+  "ActivityEvent.attachment-added": "Attachment added",
+  "ActivityEvent.card-created": "Card created",
+  "ActivityEvent.comment-added": "Comment added",
+  "ActivityEvent.content-added": "Content added",
+  "ActivityEvent.content-deleted": "Content deleted",
+  "ActivityEvent.days-ago": "{days}d ago",
+  "ActivityEvent.hours-ago": "{hours}h ago",
+  "ActivityEvent.just-now": "Just now",
+  "ActivityEvent.minutes-ago": "{minutes}m ago",
+  "ActivityEvent.property-changed": "{propertyName} changed",
+  "ActivityEvent.title-changed": "Title changed",
+  "ActivityEvent.unknown": "Activity",
+  "ActivityEvent.unknown-property": "property",
+  "ActivityPanel.no-activity": "No activity yet. Changes to this card will appear here.",
+  "ActivityPanel.show-less": "Show less",
+  "ActivityPanel.show-more": "Show {count} more",
+  "ActivityPanel.title": "Activity"
 }

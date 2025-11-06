@@ -20,6 +20,7 @@ import {Utils, IDType} from './utils'
 import {UserSettings} from './userSettings'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/telemetryClient'
 import {Category} from './store/sidebar'
+import {ActivityLogger} from './components/cardDetail/activityLog'
 
 /* eslint-disable max-lines */
 import {UserConfigPatch, UserPreference} from './user'
@@ -132,6 +133,32 @@ class Mutator {
                 const jsonres = await res.json()
                 const newBlock = jsonres[0] as Block
                 await afterRedo?.(newBlock)
+
+                if (newBlock.type === 'card') {
+                    ActivityLogger.logEvent({
+                        cardId: newBlock.id,
+                        type: 'card_created',
+                    })
+                } else if (newBlock.type === 'comment' && newBlock.parentId) {
+                    ActivityLogger.logEvent({
+                        cardId: newBlock.parentId,
+                        type: 'comment_added',
+                    })
+                } else if (newBlock.type === 'attachment' && newBlock.parentId) {
+                    ActivityLogger.logEvent({
+                        cardId: newBlock.parentId,
+                        type: 'attachment_added',
+                    })
+                } else if (newBlock.parentId && (newBlock.type === 'text' || newBlock.type === 'image' || newBlock.type === 'checkbox' || newBlock.type === 'divider')) {
+                    ActivityLogger.logEvent({
+                        cardId: newBlock.parentId,
+                        type: 'content_added',
+                        metadata: {
+                            contentType: newBlock.type,
+                        },
+                    })
+                }
+
                 return newBlock
             },
             async (newBlock: Block) => {
@@ -173,6 +200,16 @@ class Mutator {
             async () => {
                 await beforeRedo?.()
                 await octoClient.deleteBlock(block.boardId, block.id)
+
+                if (block.parentId && (block.type === 'text' || block.type === 'image' || block.type === 'checkbox' || block.type === 'divider')) {
+                    ActivityLogger.logEvent({
+                        cardId: block.parentId,
+                        type: 'content_deleted',
+                        metadata: {
+                            contentType: block.type,
+                        },
+                    })
+                }
             },
             async () => {
                 await octoClient.undeleteBlock(block.boardId, block.id)
@@ -236,6 +273,15 @@ class Mutator {
         await undoManager.perform(
             async () => {
                 await octoClient.patchBlock(boardId, blockId, {title: newTitle})
+
+                const state = store.getState()
+                const card = state.cards.cards[blockId]
+                if (card && card.type === 'card') {
+                    ActivityLogger.logEvent({
+                        cardId: blockId,
+                        type: 'title_changed',
+                    })
+                }
             },
             async () => {
                 await octoClient.patchBlock(boardId, blockId, {title: oldTitle})
@@ -645,6 +691,31 @@ class Mutator {
         }
         await this.updateBlock(boardId, newCard, card, description)
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {board: card.boardId, card: card.id})
+
+        const state = store.getState()
+        const board = state.boards.boards[boardId]
+        const propertyTemplate = board?.cardProperties?.find((p: IPropertyTemplate) => p.id === propertyId)
+        const propertyName = propertyTemplate?.name || 'Property'
+
+        const formatValue = (val: string | string[] | undefined): string => {
+            if (!val) {
+                return 'Empty'
+            }
+            if (Array.isArray(val)) {
+                return val.join(', ')
+            }
+            return val
+        }
+
+        ActivityLogger.logEvent({
+            cardId: card.id,
+            type: 'property_changed',
+            metadata: {
+                propertyName,
+                oldValue: formatValue(oldValue),
+                newValue: formatValue(value),
+            },
+        })
     }
 
     async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyTypeEnum, newName: string) {

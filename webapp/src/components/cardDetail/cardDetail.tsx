@@ -41,6 +41,7 @@ import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
 import AttachmentList from './attachment'
+import ActivityPanel from './activityPanel'
 
 import './cardDetail.scss'
 
@@ -310,6 +311,10 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         readonly={props.readonly || !canCommentBoardCards}
                     />
                 </Fragment>}
+
+                {/* Activity Log */}
+
+                {!limited && <ActivityPanel cardId={card.id}/>}
             </div>
 
             {/* Content blocks */}
